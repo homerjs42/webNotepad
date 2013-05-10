@@ -1,0 +1,29 @@
+<div>
+  <div ng-show="loggedIn">
+    <div class="page-header visible-desktop">
+      <h1>Web Notepad</h1>
+    </div>
+    <div class="page-header visible-phone visible-tablet">
+      <h3>Web Notepad</h3>
+    </div>
+  </div>
+  <div ng-show="!loggedIn" style="height: 40px"></div>
+  <div ng-show="!loggedIn">
+    <div class="hero-unit visible-desktop">
+      <h1>Welcome to the web notepad!</h1>
+      <p>
+        This is a little app that allows you to create notes that are stored both locally
+        and on the internet.  Any notes you have locally will sync to the net, and any net
+        notes will sync back to you.
+      </p>
+    </div>
+    <div class="hero-unit visible-phone visible-tablet">
+      <h3>Welcome to the web notepad!</h3>
+      <p>
+        This is a little app that allows you to create notes that are stored both locally
+        and on the internet.  Any notes you have locally will sync to the net, and any net
+        notes will sync back to you.
+      </p>
+    </div>
+  </div>
+</div>
