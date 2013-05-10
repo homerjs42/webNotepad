@@ -1,1 +1,1 @@
-This file was created by JetBrains WebStorm 6.0.1 for binding GitHub repository
+This is a simple web based note editor that stores data locally within the browser using localStorage as well as remotely using mongoDB (and the mongolabs RESTful API)
