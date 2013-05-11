@@ -73,6 +73,10 @@ controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, n
         };
     });
 
+    $scope.$on('remoteNotesUpdated', function(event, data) {
+        $scope.session = sessionService.getSession();
+        console.log("data: ", data);
+    });
 
     $scope.$on('noteDeleted', function() {
         $scope.session = sessionService.getSession();

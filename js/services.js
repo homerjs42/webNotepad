@@ -110,7 +110,7 @@ function($window, $http, $cookies, $rootScope) {             // service construc
  */
 factory('noteService',
         function($http, $resource, $window, $rootScope, localStorageService, sessionService) {
-            var KEY = "put your key here";
+            var KEY = "add key here";
             var BASE_PATH = 'https://api.mongolab.com/api/1/databases/simple_test_db/collections/'
             var noteList;
             var session = sessionService.getSession();
@@ -119,6 +119,12 @@ factory('noteService',
             var getNoteList = function() {
                 var localNotes = localStorageService.get('localNotes');
 
+                if (!localNotes) {
+                    localNotes = [];
+                }
+
+                noteList = localNotes;
+
                 if (session) {
                     var url = BASE_PATH + session.name;
                     $http.get(url,
@@ -126,7 +132,29 @@ factory('noteService',
                                   params: { apiKey: KEY }
                               }).
                         success(function(data, status) {           // on success method
-                                    console.log("success --> data: ", data, "; status: ", status);
+//                                    console.log("success --> data: ", data, "; status: ", status);
+                                    for (var i = 0; i < data.length; i++) {
+                                        var note = angular.fromJson(data[i].note);
+                                        note.remoteId = data[i]._id;
+                                        var found;
+                                        for (var j = 0; j < localNotes.length; j++) {
+                                            if (localNotes[j].id == note.id) {
+                                                found = true;
+                                                var localDate = new Date(localNotes[j].date);
+                                                var remoteDate = new Date(note.date);
+                                                if (localDate.getTime() < remoteDate.getTime()) { // local note is older than remote one, update it.
+                                                    localNotes[i] = note;
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        if (!found) {
+                                            localNotes.push(note);
+                                        }
+                                        console.log("found note: ", note);
+                                    }
+                                    noteList = localNotes;
+                                    $rootScope.$broadcast('remoteNotesUpdated', noteList);
                                 }).
                         error(function(data, status) {
                                   console.log("error --> data: ", data, "; status: ", status, "; error count: ", errCount);
@@ -134,9 +162,6 @@ factory('noteService',
 
                 }
 
-                if (localNotes) {
-                    noteList = localNotes;
-                }
                 return noteList;
             };
 
@@ -185,13 +210,16 @@ factory('noteService',
                 if (session) {
                     var url = BASE_PATH + session.name + '?apiKey=' + KEY;
                     $http.post(url,
-                              { note: angular.toJson(note) }
+                              { note: angular.toJson(note) },
+                              {
+                                  params: { apiKey: KEY }
+                              }
                     ).
                         success(function(data, status) {           // on success method
-                                    console.log("success --> data: ", data, "; status: ", status);
+                                    console.log("success posting --> data: ", data, "; status: ", status);
                                 }).
                         error(function(data, status) {
-                                  console.log("error --> data: ", data, "; status: ", status, "; error count: ", errCount);
+                                  console.log("error posting --> data: ", data, "; status: ", status);
                               });
 
                 }
@@ -211,6 +239,24 @@ factory('noteService',
                     }
                     noteList = nl;
                     localStorageService.add('localNotes', nl);
+                }
+
+                if (session) {
+                    var url = BASE_PATH + session.name + '/' + note.remoteId.$oid;
+                    $http.delete(url,
+                               {
+                                   params: {
+                                       apiKey: KEY,
+                                   }
+                               }
+                    ).
+                        success(function(data, status) {           // on success method
+                                    console.log("success putting --> data: ", data, "; status: ", status);
+                                }).
+                        error(function(data, status) {
+                                  console.log("error putting --> data: ", data, "; status: ", status);
+                              });
+
                 }
 
                 $rootScope.$broadcast('noteDeleted', [ note ]);
