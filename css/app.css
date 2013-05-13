@@ -11,11 +11,11 @@ html,body {
 
 /* Wrapper for page content to push down footer */
 #wrap {
-    min-height: 100%;
+/*    min-height: 100%;
     height: auto !important;
-    height: 100%;
-    /* Negative indent footer by it's height */
-    margin: 0 auto -60px;
+    height: 100%; */
+    /* Negative indent footer by its height */
+/*    margin: 0 auto -60px; */
 }
 
 /* Set the fixed height of the footer here */
@@ -33,10 +33,22 @@ html,body {
     }
 }
 
+div.spacer {
+    height: 10px;
+}
+
 td {
     vertical-align: top;
 }
 
 td.flatCell {
     white-space: nowrap;
+}
+
+.systemHeaderLoggedInHeight {
+    height: 90px;
+}
+
+.systemHeaderLoggedOffHeight {
+    height: auto;
 }

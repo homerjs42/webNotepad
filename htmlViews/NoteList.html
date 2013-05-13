@@ -1,4 +1,5 @@
 <div ng-show="session">
+  <div ng-show="loading && !error" class="alert alert-info"><i class="icon-refresh icon-spin"></i> refreshing notes...</div>
   <div ng-show="(!noteList || noteList.length == 0) && !error" class="alert alert-info"><i class="icon-exclamation-sign"></i> You currently have no notes...</div>
   <div ng-show="error" class="alert alert-error">Error getting note list: {{ error }}</div>
   <table ng-show="noteList" class="table table-condensed table-striped table-bordered table-hover span12" >
@@ -12,7 +13,7 @@
     <tbody>
       <tr ng-repeat="note in noteList" ng-click="editNote(listener.seqno)">
         <td class="flatCell ">{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</td>
-        <td >{{ note.content }}</td>
+        <td ><div ng-bind-html="note.content"></div></td>
         <td class="align-right">
           <a href="editNote/{{ note.id }}" ><i class="icon-pencil"></i> </a>
           <a ng-click="deleteNote(note)" ><i class="icon-trash"></i> </a>

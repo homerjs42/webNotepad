@@ -13,6 +13,7 @@ var webNotepad = angular.module('webNotepad',
          'webNotepad.directives',
          'webNotepad.inputDirectives',
          'ngCookies',
+         'ngSanitize',
          'LocalStorageModule'
          ]);
 

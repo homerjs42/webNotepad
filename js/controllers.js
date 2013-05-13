@@ -28,9 +28,11 @@ controller('EditNoteCtrl', function EditNoteCtrl($scope, $routeParams, $location
 
     $scope.deleteNote = function deleteNote(note) {
         noteService.deleteNote(note);
-        $location.path("/");
     }
 
+    $scope.$on('noteDeleted', function(event, data) {
+        $location.path("/");
+    });
 
     $scope.$on('sessionStateChanged', function() {
         $scope.session = sessionService.getSession();
@@ -67,37 +69,37 @@ controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, n
         $scope.session = sessionService.getSession();
         console.log("sessionStateChanged, session=", $scope.session);
         if ($scope.session) {
-            $scope.getNotes();
+            $scope.getNotes(true);
         } else {
-            $scope.noteList = [];
+            $scope.noteList = $scope.getNotes(false);
         };
     });
 
     $scope.$on('remoteNotesUpdated', function(event, data) {
         $scope.session = sessionService.getSession();
-        console.log("data: ", data);
+        $scope.noteList = data;
+        $scope.loading = false;
+        console.log("remote notes: ", data);
+        console.log("note list: ", $scope.noteList)
     });
 
-    $scope.$on('noteDeleted', function() {
-        $scope.session = sessionService.getSession();
-        if ($scope.session) {
-           $scope.getNotes();
-        } else {
-           $scope.noteList = [];
-        };
+    $scope.$on('noteDeleted', function(event, data) {
+        $scope.getNotes(data);
     });
 
-    $scope.getNotes = function() {
-        $scope.noteList = noteService.getNoteList();
+    $scope.getNotes = function(getRemotes) {
+        if (getRemotes) {
+            $scope.loading = true;
+        }
+        return noteService.getNoteList(getRemotes);
     }
 
     $scope.deleteNote = function deleteNote(note) {
         noteService.deleteNote(note);
-        $location.path("/");
     }
 
     if ($scope.session) {
-        $scope.getNotes();
+        $scope.getNotes(true);
     }
 });
 

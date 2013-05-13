@@ -1,30 +1,14 @@
-<div ng-show="session">
+<div ng-show="session" >
 <div ng-show="!note" class="alert alert-info"><i class="icon-spinner icon-spin"></i> Loading Note...</div>
 
-<!--
-<pre>
-{{ selectedListener | json }}
-</pre>
--->
-
-<form ng-show="note" name="noteForm" novalidate class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label" for="inputNoteDate">Date:</label>
-    <div class="controls">
-      <span>{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</span>
-    </div>
+<form ng-show="note" name="noteForm" novalidate class="form">
+  <span><b>Date: </b>{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</span>
+  <label for="inputContent"><b>Content:</b> (click to edit)</label>
+  <div name="inputContent" contenteditable="true" ng-model="note.content" title="Click to edit"></div>
+  <div class="spacer"></div>
+  <div class="controls">
+      <a class="btn btn-small btn-primary" ng-click="saveNote()"><i class="icon-save"></i> Save</a>
+      <a class="btn btn-small btn-warning" ng-click="deleteNote(note)"><i class="icon-trash"></i> Remove</a>
   </div>
-  <div class="control-group">
-    <label class="control-label" for="inputContent">Content:</label>
-    <div class="controls">
-      <textarea name="inputContent" class="input-xxlarge" required ng-model="note.content"></textarea>
-    </div> 
-  </div>
-  <div class="control-group">
-    <div class="controls">
-        <a class="btn btn-small btn-primary" ng-click="saveNote()"><i class="icon-save"></i> Save</a>
-        <a class="btn btn-small btn-warning" ng-click="deleteNote(note)"><i class="icon-trash"></i> Remove</a>
-    </div>
-  </div> 
 </form>
 </div>
