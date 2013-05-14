@@ -112,9 +112,9 @@ angular.module('webNotepad.services', ['ngResource']).
  * Note service
  */
     factory('noteService',
-    function ($http, $resource, $window, $rootScope, localStorageService, sessionService) {
-        var KEY =API_KEY;
-        var BASE_PATH = API_BASE_PATH;
+    function ($http, $resource, $window, $rootScope, localStorageService, sessionService, api_key, api_base_path) {
+        var KEY = api_key;
+        var BASE_PATH = api_base_path;
         var noteList;
         var session = sessionService.getSession();
 

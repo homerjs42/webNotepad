@@ -12,6 +12,7 @@ var webNotepad = angular.module('webNotepad',
          'webNotepad.controllers',
          'webNotepad.directives',
          'webNotepad.inputDirectives',
+         'MongolabsSettings',
          'ngCookies',
          'ngSanitize',
          'LocalStorageModule'
