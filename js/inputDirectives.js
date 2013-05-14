@@ -28,10 +28,6 @@ angular.module('webNotepad.inputDirectives', []).
             link: function (scope, elm, attrs, ctrl) {
                 // view -> model
                 elm.bind('blur', function () {
-                    console.log("blur: ", ctrl.$viewValue);
-                    console.log("attrs = ", attrs);
-                    console.log("scope = ", scope);
-                    console.log("ctrl = ", ctrl);
                     scope.$apply(function () {
                         ctrl.$setViewValue(elm.html());
                     });
@@ -39,10 +35,6 @@ angular.module('webNotepad.inputDirectives', []).
 
                 // model -> view
                 ctrl.$render = function () {
-                    console.log("render: ", ctrl.$viewValue);
-                    console.log("attrs = ", attrs);
-                    console.log("scope = ", scope);
-                    console.log("ctrl = ", ctrl);
                     elm.html(ctrl.$viewValue);
                 };
 

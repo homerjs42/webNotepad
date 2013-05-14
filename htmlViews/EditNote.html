@@ -8,6 +8,7 @@
     <div name="inputContent" contenteditable="true" ng-model="note.content" title="Click to edit"></div>
     <div class="spacer"></div>
     <div class="controls">
+      <a class="btn btn-small " ng-click="back()"><i class="icon-arrow-left"></i> Back</a>
       <a class="btn btn-small btn-primary" ng-click="saveNote()"><i class="icon-save"></i> Save</a>
       <a class="btn btn-small btn-warning" ng-click="deleteNote(note)"><i class="icon-trash"></i> Remove</a>
     </div>

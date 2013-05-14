@@ -31,6 +31,10 @@ angular.module('webNotepad.controllers', ['ngResource']).
             noteService.deleteNote(note);
         }
 
+        $scope.back = function back() {
+            $location.path("/");
+        }
+
         $scope.$on('noteDeleted', function (event, data) {
             $location.path("/");
         });

@@ -41,14 +41,12 @@ angular.module('webNotepad.filters', []).
     filter('htmlify', function() {
         return function (text) {
             var result = "";
-            console.log("text: ", text);
+
             result = text.replace(/&lt;/ig, "<");
             result = result.replace(/&gt;/ig, ">");
 
             var httpMatcher = /(https?:\/\/[^\s<>]+)/gi;
             var result = result.replace(httpMatcher, "<a href=\"$1\">$1</a>");
-
-            console.log("result: ", result);
 
             return result;
         }

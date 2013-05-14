@@ -24,8 +24,8 @@
       </tbody>
     </table>
   </div>
-  <div ng-show="noteList" class="visible-phone visible-table"><b>Notes:</b><br/>
-    <ul ng-show="noteList" class="unstyled">
+  <div ng-show="noteList.length" class="visible-phone visible-table"><b>Notes:</b><br/>
+    <ul class="unstyled">
       <li ng-repeat="note in noteList" class="divided">
         <b>{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</b>
         <a href="editNote/{{ note.id }}" ><i class="icon-pencil"></i> </a>
