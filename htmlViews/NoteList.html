@@ -3,24 +3,36 @@
   <div ng-show="(!noteList || noteList.length == 0) && !error" class="alert alert-info">
     <i class="icon-exclamation-sign"></i> You currently have no notes...</div>
   <div ng-show="error" class="alert alert-error">Error getting note list: {{ error }}</div>
-  <table ng-show="noteList" class="table table-condensed table-striped table-bordered table-hover span12" >
-    <thead>
-      <tr>
-        <th class="span2">Date</th>
-        <th class="span9">Content</th>
-        <th class="span1">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="note in noteList" ng-click="editNote(listener.seqno)">
-        <td class="flatCell ">{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</td>
-        <td ><div ng-bind-html="note.content"></div></td>
-        <td class="align-right">
-          <a href="editNote/{{ note.id }}" ><i class="icon-pencil"></i> </a>
-          <a ng-click="deleteNote(note)" ><i class="icon-trash"></i> </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="visible-desktop">
+    <table ng-show="noteList" class="table table-condensed table-striped table-bordered table-hover span12" >
+      <thead>
+        <tr>
+          <th class="span2">Date</th>
+          <th class="span9">Content</th>
+          <th class="span1">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="note in noteList">
+          <td class="flatCell ">{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</td>
+          <td ><div ng-bind-html="note.content"></div></td>
+          <td class="align-right">
+            <a href="editNote/{{ note.id }}" ><i class="icon-pencil"></i> </a>
+            <a ng-click="deleteNote(note)" ><i class="icon-trash"></i> </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div ng-show="noteList" class="visible-phone visible-table"><b>Notes:</b><br/>
+    <ul ng-show="noteList" class="unstyled">
+      <li ng-repeat="note in noteList" class="divided">
+        <b>{{ note.date | date:'MM-dd-yyyy, hh:mm a' }}</b>
+        <a href="editNote/{{ note.id }}" ><i class="icon-pencil"></i> </a>
+        <a ng-click="deleteNote(note)" ><i class="icon-trash"></i> </a>
+        <div ng-bind-html="note.content"></div>
+      </li>
+    </ul>
+  </div>
   <a href="editNote/-1" class="btn btn-small btn-success"><i class="icon-plus-sign"></i> Add Note</a>
 </div>
