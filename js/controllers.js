@@ -60,7 +60,7 @@ angular.module('webNotepad.controllers', ['ngResource']).
  * @param sessionService
  * @constructor
  */
-    controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, noteService, sessionService) {
+    controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, $timeout, noteService, sessionService) {
         $scope.session = sessionService.getSession();
         $scope.error = null;
         $scope.loading = false;
@@ -78,11 +78,12 @@ angular.module('webNotepad.controllers', ['ngResource']).
         });
 
         $scope.$on('remoteNotesUpdated', function (event, data) {
+            console.log("pre remoteNotesUpdated, note list: ", $scope.noteList)
             $scope.session = sessionService.getSession();
             $scope.noteList = data;
             $scope.loading = false;
-            console.log("remote notes: ", data);
-            console.log("note list: ", $scope.noteList)
+            console.log("remoteNotesUpdated, remote notes: ", data);
+            console.log("remoteNotesUpdated, note list: ", $scope.noteList)
         });
 
         $scope.$on('noteDeleted', function (event, data) {
@@ -94,6 +95,7 @@ angular.module('webNotepad.controllers', ['ngResource']).
                 $scope.loading = true;
             }
             $scope.noteList = noteService.getNoteList(getRemotes);
+            console.log("getNotes() - local notes: ", $scope.noteList);
         }
 
         $scope.deleteNote = function deleteNote(note) {

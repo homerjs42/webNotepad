@@ -121,7 +121,8 @@ angular.module('webNotepad.services', ['ngResource']).
 
         var getNoteList = function (getRemotes) {
             console.log("getNoteList()  getRemotes = ", getRemotes);
-            var localNotes = localStorageService.get('localNotes');
+            var namePrefix = session ? session.name + '.' : '';
+            var localNotes = localStorageService.get(namePrefix + 'localNotes');
 
             if (!localNotes) {
                 localNotes = [];
@@ -160,7 +161,7 @@ angular.module('webNotepad.services', ['ngResource']).
                         }
                         noteList = localNotes;
                         // save local note list with remotes too
-                        localStorageService.add('localNotes', noteList);
+                        localStorageService.add(namePrefix + 'localNotes', noteList);
 
                         // broadcast update
                         $rootScope.$broadcast('remoteNotesUpdated', noteList);
@@ -200,6 +201,7 @@ angular.module('webNotepad.services', ['ngResource']).
         };
 
         function saveNoteLocally(note) {
+            var namePrefix = session ? session.name + '.' : '';
             var found = false;
             if (noteList) {
                 for (var i = 0; i < noteList.length; i++) {
@@ -215,7 +217,7 @@ angular.module('webNotepad.services', ['ngResource']).
             } else {
                 noteList = [ note ];
             }
-            localStorageService.add('localNotes', noteList);
+            localStorageService.add(namePrefix + 'localNotes', noteList);
             console.log("stored local notes list: ", noteList);
         }
 
@@ -265,6 +267,7 @@ angular.module('webNotepad.services', ['ngResource']).
 
 
         var deleteNote = function (note) {
+            var namePrefix = session ? session.name + '.' : '';
             console.log("deleting note: ", note);
             var nl = [];
             getNoteList(false);
@@ -277,7 +280,7 @@ angular.module('webNotepad.services', ['ngResource']).
                     }
                 }
                 noteList = nl;
-                localStorageService.add('localNotes', nl);
+                localStorageService.add(namePrefix + 'localNotes', nl);
             }
 
             if (session && note.remoteId) {

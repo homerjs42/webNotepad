@@ -30,5 +30,27 @@ angular.module('webNotepad.filters', []).
 
             return result;
         };
+    }).
+
+
+/**
+ * Do not ever use this filter outside of ng-bind-html.
+ * at least if you wnat to be safe, don't do it!
+ * it turns escaped html into real html.
+ */
+    filter('htmlify', function() {
+        return function (text) {
+            var result = "";
+            console.log("text: ", text);
+            result = text.replace(/&lt;/ig, "<");
+            result = result.replace(/&gt;/ig, ">");
+
+            var httpMatcher = /(https?:\/\/[^\s<>]+)/gi;
+            var result = result.replace(httpMatcher, "<a href=\"$1\">$1</a>");
+
+            console.log("result: ", result);
+
+            return result;
+        }
     });
 
