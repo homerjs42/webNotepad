@@ -72,9 +72,9 @@ angular.module('webNotepad.controllers', ['ngResource']).
             if ($scope.session) {
                 $scope.getNotes(true);
             } else {
-                $scope.noteList = $scope.getNotes(false);
+                $scope.getNotes(false);
             }
-            ;
+
         });
 
         $scope.$on('remoteNotesUpdated', function (event, data) {
@@ -93,7 +93,7 @@ angular.module('webNotepad.controllers', ['ngResource']).
             if (getRemotes) {
                 $scope.loading = true;
             }
-            return noteService.getNoteList(getRemotes);
+            $scope.noteList = noteService.getNoteList(getRemotes);
         }
 
         $scope.deleteNote = function deleteNote(note) {

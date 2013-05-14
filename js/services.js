@@ -31,10 +31,11 @@ angular.module('webNotepad.services', ['ngResource']).
              */
             login: function (credentials) {
                 // fake service for now.
-                if (credentials.userName == 'doug' && credentials.password == 'doug') {
-                    session = {id: new Date().getTime(), name: credentials.userName };
+                if (credentials.userName && credentials.password) {
+                    session = {id: new Date().getTime(), name: credentials.userName, pass: credentials.password };
                     $cookies['defaultDomainSID'] = "" + session.id;
                     $cookies['name'] = session.name;
+                    $cookies['pass'] = session.pass;
                     $rootScope.$broadcast('sessionStateChanged');
                 } else {
                     $rootScope.$broadcast('sessionStateError');
@@ -51,6 +52,7 @@ angular.module('webNotepad.services', ['ngResource']).
                 session = null;
                 delete $cookies['defaultDomainSID'];
                 delete $cookies['name'];
+                delete $cookies['pass'];
                 $rootScope.$broadcast('sessionStateChanged');
             },
 
@@ -63,6 +65,7 @@ angular.module('webNotepad.services', ['ngResource']).
                 session = null;
                 delete $cookies['defaultDomainSID'];
                 delete $cookies['name'];
+                delete $cookies['pass'];
                 $rootScope.$broadcast('sessionStateChanged');
             },
 
@@ -75,11 +78,12 @@ angular.module('webNotepad.services', ['ngResource']).
                 if (session == null) {
                     var sessionState = $cookies['defaultDomainSID'];
                     var name = $cookies['name'];
+                    var pass = $cookies['pass'];
                     console.log($cookies);
                     console.log("state: ", sessionState);
 
                     if (sessionState) {
-                        session = { id: sessionState, name: name };
+                        session = { id: sessionState, name: name, pass: pass };
                         $rootScope.$broadcast('sessionStateChanged');
                     }
                 }
@@ -109,8 +113,8 @@ angular.module('webNotepad.services', ['ngResource']).
  */
     factory('noteService',
     function ($http, $resource, $window, $rootScope, localStorageService, sessionService) {
-        var KEY = "your key here";
-        var BASE_PATH = 'https://api.mongolab.com/api/1/databases/simple_test_db/collections/'
+        var KEY =API_KEY;
+        var BASE_PATH = API_BASE_PATH;
         var noteList;
         var session = sessionService.getSession();
 
@@ -136,22 +140,23 @@ angular.module('webNotepad.services', ['ngResource']).
                         for (var i = 0; i < data.length; i++) {
                             var note = angular.fromJson(data[i].note);
                             note.remoteId = data[i]._id.$oid;
-                            var found;
+                            var found = false;
                             for (var j = 0; j < localNotes.length; j++) {
                                 if (localNotes[j].id == note.id) {
                                     found = true;
                                     var localDate = new Date(localNotes[j].date);
                                     var remoteDate = new Date(note.date);
-                                    if (localDate.getTime() < remoteDate.getTime()) { // local note is older than remote one, update it.
+                                    if (localDate.getTime() <= remoteDate.getTime()) { // local note is older than remote one, update it.
                                         localNotes[i] = note;
+                                        console.log("updating note: ", note);
                                     }
                                     break;
                                 }
                             }
                             if (!found) {
+                                console.log("note not found in local store.  Adding it: ", note)
                                 localNotes.push(note);
                             }
-                            console.log("found note: ", note);
                         }
                         noteList = localNotes;
                         // save local note list with remotes too
@@ -228,6 +233,7 @@ angular.module('webNotepad.services', ['ngResource']).
                         }
                     ).
                         success(function (data, status) {           // on success method
+                            $rootScope.$broadcast('showToastMessage', {message: "Note saved"});
                             console.log("saved note: ", note);
                         }).
                         error(function (data, status) {
@@ -246,6 +252,7 @@ angular.module('webNotepad.services', ['ngResource']).
 
                             // update with remote id
                             saveNoteLocally(note);
+                            $rootScope.$broadcast('showToastMessage', {message: "Note saved"});
                             console.log("saved note: ", note);
                         }).
                         error(function (data, status) {
@@ -285,10 +292,12 @@ angular.module('webNotepad.services', ['ngResource']).
                     success(function (data, status) {           // on success method
                         // broadcast update
                         $rootScope.$broadcast('noteDeleted', true);
+                        $rootScope.$broadcast('showToastMessage', {message: "Note removed from server."});
                         console.log("success deleting note: ", note, " --> data: ", data, "; status: ",
                             status);
                     }).
                     error(function (data, status) {
+                        $rootScope.$broadcast('noteDeleted', true);
                         console.log("error deleting --> data: ", data, "; status: ", status);
                     });
             } else {
