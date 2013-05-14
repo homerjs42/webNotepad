@@ -1,6 +1,7 @@
 <div ng-show="session">
   <div ng-show="loading && !error" class="alert alert-info"><i class="icon-refresh icon-spin"></i> refreshing notes...</div>
-  <div ng-show="(!noteList || noteList.length == 0) && !error" class="alert alert-info"><i class="icon-exclamation-sign"></i> You currently have no notes...</div>
+  <div ng-show="(!noteList || noteList.length == 0) && !error" class="alert alert-info">
+    <i class="icon-exclamation-sign"></i> You currently have no notes...</div>
   <div ng-show="error" class="alert alert-error">Error getting note list: {{ error }}</div>
   <table ng-show="noteList" class="table table-condensed table-striped table-bordered table-hover span12" >
     <thead>

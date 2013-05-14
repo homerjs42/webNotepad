@@ -1,4 +1,4 @@
-<div ng-show="!session" class="well"> 
+<div ng-show="!session" class="well">
   <form name="loginForm" novalidate class="form-horizontal">
     <legend>Please Login</legend>
     <div class="alert alert-error" ng-show="error">
@@ -7,31 +7,34 @@
     </div>
     <div class="control-group">
       <label class="control-label" for="inputUsername">Username</label>
+
       <div class="controls">
-      <div class="input-prepend">
-        <span class="add-on"><i class="icon-user"></i></span>
-        <input type="text" name="inputUsername" placeholder="username"
-         ng-model="credentials.userName" focus-me="focusUsername" 
-         ng-change="focusUsername = false" required />
+        <div class="input-prepend">
+          <span class="add-on"><i class="icon-user"></i></span>
+          <input type="text" name="inputUsername" placeholder="username"
+                 ng-model="credentials.userName" focus-me="focusUsername"
+                 ng-change="focusUsername = false" required/>
         </div>
       </div>
     </div>
     <div class="control-group">
       <label class="control-label" for="inputPassword">Password</label>
+
       <div class="controls">
-      <div class="input-prepend">
-        <span class="add-on"><i class="icon-key"></i></span>
-        <input type="password" name="inputPassword" placeholder="password" 
-         ng-model="credentials.password"  focus-me="focusPassword"  
-         ng-change="focusPassword = false" required />
-      </div>
+        <div class="input-prepend">
+          <span class="add-on"><i class="icon-key"></i></span>
+          <input type="password" name="inputPassword" placeholder="password"
+                 ng-model="credentials.password" focus-me="focusPassword"
+                 ng-change="focusPassword = false" required/>
+        </div>
       </div>
     </div>
     <div class="control-group">
       <div class="controls">
-        <button type="reset" class="btn"  ng-click="resetLogin(false)">reset</button>
-        <button type="submit" class="btn btn-primary" ng-click="doLogin()" ng-disabled="loginForm.$invalid">login</button>
+        <button type="reset" class="btn" ng-click="resetLogin(false)">reset</button>
+        <button type="submit" class="btn btn-primary" ng-click="doLogin()" ng-disabled="loginForm.$invalid">login
+        </button>
       </div>
-    </div> 
+    </div>
   </form>
 </div>

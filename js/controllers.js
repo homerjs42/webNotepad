@@ -13,42 +13,43 @@ angular.module('webNotepad.controllers', ['ngResource']).
  * @param sessionService
  * @constructor
  */
-controller('EditNoteCtrl', function EditNoteCtrl($scope, $routeParams, $location, $rootScope, noteService, sessionService) {
-    $scope.session = sessionService.getSession();
-    $scope.note = null;
-    $scope.saveNote = function saveNote() {
-        $scope.note.date = new Date();
-        noteService.saveNote($scope.note);
-        $location.path("/");
-    }
-
-    $scope.getNote = function getNote(noteId) {
-        noteService.getNote(noteId)
-    }
-
-    $scope.deleteNote = function deleteNote(note) {
-        noteService.deleteNote(note);
-    }
-
-    $scope.$on('noteDeleted', function(event, data) {
-        $location.path("/");
-    });
-
-    $scope.$on('sessionStateChanged', function() {
+    controller('EditNoteCtrl',
+    function EditNoteCtrl($scope, $routeParams, $location, $rootScope, noteService, sessionService) {
         $scope.session = sessionService.getSession();
+        $scope.note = null;
+        $scope.saveNote = function saveNote() {
+            $scope.note.date = new Date();
+            noteService.saveNote($scope.note);
+            $location.path("/");
+        }
+
+        $scope.getNote = function getNote(noteId) {
+            noteService.getNote(noteId)
+        }
+
+        $scope.deleteNote = function deleteNote(note) {
+            noteService.deleteNote(note);
+        }
+
+        $scope.$on('noteDeleted', function (event, data) {
+            $location.path("/");
+        });
+
+        $scope.$on('sessionStateChanged', function () {
+            $scope.session = sessionService.getSession();
+            if ($scope.session) {
+                $scope.note = noteService.getNote($routeParams.noteId);
+            }
+        });
+
+        $scope.$on('sessionStateError', function () {
+            $scope.session = sessionService.getSession();
+        });
+
         if ($scope.session) {
             $scope.note = noteService.getNote($routeParams.noteId);
         }
-    });
-
-    $scope.$on('sessionStateError', function() {        
-        $scope.session = sessionService.getSession();
-    });
-
-    if ($scope.session) {
-        $scope.note = noteService.getNote($routeParams.noteId);
-    }
-}).
+    }).
 
 
 /**
@@ -59,55 +60,56 @@ controller('EditNoteCtrl', function EditNoteCtrl($scope, $routeParams, $location
  * @param sessionService
  * @constructor
  */
-controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, noteService, sessionService) {
-    $scope.session = sessionService.getSession();
-    $scope.error = null;
-    $scope.loading = false;
-    $scope.noteList;
-
-    $scope.$on('sessionStateChanged', function() {        
+    controller('NoteListCtrl', function NoteListCtrl($scope, $location, $resource, noteService, sessionService) {
         $scope.session = sessionService.getSession();
-        console.log("sessionStateChanged, session=", $scope.session);
+        $scope.error = null;
+        $scope.loading = false;
+        $scope.noteList;
+
+        $scope.$on('sessionStateChanged', function () {
+            $scope.session = sessionService.getSession();
+            console.log("sessionStateChanged, session=", $scope.session);
+            if ($scope.session) {
+                $scope.getNotes(true);
+            } else {
+                $scope.noteList = $scope.getNotes(false);
+            }
+            ;
+        });
+
+        $scope.$on('remoteNotesUpdated', function (event, data) {
+            $scope.session = sessionService.getSession();
+            $scope.noteList = data;
+            $scope.loading = false;
+            console.log("remote notes: ", data);
+            console.log("note list: ", $scope.noteList)
+        });
+
+        $scope.$on('noteDeleted', function (event, data) {
+            $scope.getNotes(data);
+        });
+
+        $scope.getNotes = function (getRemotes) {
+            if (getRemotes) {
+                $scope.loading = true;
+            }
+            return noteService.getNoteList(getRemotes);
+        }
+
+        $scope.deleteNote = function deleteNote(note) {
+            noteService.deleteNote(note);
+        }
+
         if ($scope.session) {
             $scope.getNotes(true);
-        } else {
-            $scope.noteList = $scope.getNotes(false);
-        };
-    });
-
-    $scope.$on('remoteNotesUpdated', function(event, data) {
-        $scope.session = sessionService.getSession();
-        $scope.noteList = data;
-        $scope.loading = false;
-        console.log("remote notes: ", data);
-        console.log("note list: ", $scope.noteList)
-    });
-
-    $scope.$on('noteDeleted', function(event, data) {
-        $scope.getNotes(data);
-    });
-
-    $scope.getNotes = function(getRemotes) {
-        if (getRemotes) {
-            $scope.loading = true;
         }
-        return noteService.getNoteList(getRemotes);
-    }
-
-    $scope.deleteNote = function deleteNote(note) {
-        noteService.deleteNote(note);
-    }
-
-    if ($scope.session) {
-        $scope.getNotes(true);
-    }
-});
+    });
 
 
 function TestCtrl($scope, localStorageService) {
     $scope.myvalue = localStorageService.get('screenerApp.myValue');
     $scope.save = function save(value) {
-        var o = {"someData": "this is a saved object", "value" : value};
+        var o = {"someData": "this is a saved object", "value": value};
         localStorageService.add('screenerApp.myValue', o);
         o = localStorageService.get('screenerApp.myValue');
         $scope.myvalue = o;
